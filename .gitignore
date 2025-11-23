@@ -1,0 +1,6 @@
+#DONT INCLUDE THIS FILES
+
+__pycache__/
+.venv
+.idea/
+
