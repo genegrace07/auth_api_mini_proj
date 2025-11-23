@@ -1,1 +1,22 @@
-[]
+[
+    {
+        "id": 0,
+        "username": "luffy",
+        "password": "$5$rounds=535000$LiJv35S7TZDfBL3T$XFKCyZZdcWEqr/Rx41mxDMQN9tsLZmulTke8b6NbU.C"
+    },
+    {
+        "id": 1,
+        "username": "nami",
+        "password": "$5$rounds=535000$tQcm3PwDjHaZEM3O$tnGVhFpZFwd5HBml3W8L19OTkAEzLnNQib2QEMOAc9C"
+    },
+    {
+        "id": 2,
+        "username": "zorro",
+        "password": "$5$rounds=535000$hiFb1dNOitQjNQ1G$ssUZ4S5NVgz1YFXXw52Ysf2V7..bX6e9gFSPv4sWD2A"
+    },
+    {
+        "id": 3,
+        "username": "sanji",
+        "password": "$5$rounds=535000$8WMM0mBy1x3fmpbp$YnsLeCKGJL1g8TkrAsjr7ighllXscfmXEk1ugtiKvU3"
+    }
+]

@@ -10,14 +10,14 @@
 <body>
 <center>
 <h2>SIGN UP</h2>
-<form method="post">
-    <table><tr><td>
+<form method="post" action="{{request.url_for('signup_get')}}">
+    <table><tr><td align="center">
         Username <input type="text" name="username" placeholder="Username">
           </td></tr>
-          <tr><td>
+          <tr><td align="center">
         Password <input type="password" name="password" placeholder="Password">
           </td></tr>
-          <tr><td>
+          <tr><td align="center">
         <input type="submit" value="Submit" style="width:100px; height:25px; border-radius:50px; font-size:18px">
           </td></tr>
     </table>
