@@ -23,7 +23,7 @@ data = []
 user_data = 'data.json'
 
 @app.get('/',response_class=HTMLResponse)
-async def login(request:Request):
+async def login_get(request:Request):
     return templates.TemplateResponse('login.html',{"request":request})
 @app.get('/signup',response_class=HTMLResponse)
 async def signup_get(request:Request):
@@ -45,6 +45,6 @@ async def signup_post(request:Request,username:str=Form(...),password:str=Form(.
             json.dump(data,f,indent=4)
         return templates.TemplateResponse("signup.html",{"request":request})
 @app.post('/',response_class=HTMLResponse)
-async def login(username:str=Form(),password:str=Form()):
+async def login_post(username:str=Form(),password:str=Form()):
     return templates.TemplateResponse('login.html')
 
