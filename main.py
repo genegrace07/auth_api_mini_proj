@@ -7,6 +7,7 @@ from pydantic import  BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
 import json
 import os
+from datetime import datetime,timedelta
 
 app = FastAPI()
 
@@ -17,6 +18,9 @@ class Users(BaseModel):
 
 templates = Jinja2Templates(directory="templates")
 pwd_context = CryptContext(schemes=['sha256_crypt'],deprecated="auto")
+SECRET_KEY = "mysecretkey"
+ALGORITHM = 'HS256'
+token_expire = 15
 
 data = []
 
@@ -30,8 +34,9 @@ async def signup_get(request:Request):
     return templates.TemplateResponse('signup.html',{"request":request})
 @app.post('/signup',response_class=HTMLResponse)
 async def signup_post(request:Request,username:str=Form(...),password:str=Form(...)):
-        if os.path.getsize(user_data) == 0:
-            data = []
+        if not os.path.exists(user_data) or os.path.getsize(user_data) == 0:
+            with open(user_data,'w') as f:
+                json.dump([],f)
 
         with open(user_data,'r') as f:
             data=json.load(f)
@@ -44,7 +49,22 @@ async def signup_post(request:Request,username:str=Form(...),password:str=Form(.
         with open(user_data,"w") as f:
             json.dump(data,f,indent=4)
         return templates.TemplateResponse("signup.html",{"request":request})
+@app.get('/main',response_class=HTMLResponse)
+def main(request:Request):
+    return templates.TemplateResponse('main.html',{'request':request})
+
 @app.post('/',response_class=HTMLResponse)
 async def login_post(username:str=Form(),password:str=Form()):
-    return templates.TemplateResponse('login.html')
+    with open(user_data,'r') as f:
+        data = json.load(f)
+    get_data = next((d for d in data if username == d['username']),None)
+    if not get_data:
+        return 'Invalid username'
+    verify_pwd = pwd_context.verify(password,get_data['password'])
+    if not verify_pwd:
+        return 'Invalid password'
 
+    expiry = datetime.utcnow() + timedelta(minutes=token_expire)
+    for_payload = {"id":get_data['id'],"username":get_data['username'],"exp":expiry}
+    your_token = jwt.encode(for_payload,SECRET_KEY,algorithm=ALGORITHM)
+    return RedirectResponse('/main',status_code=303)

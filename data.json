@@ -18,5 +18,20 @@
         "id": 3,
         "username": "sanji",
         "password": "$5$rounds=535000$8WMM0mBy1x3fmpbp$YnsLeCKGJL1g8TkrAsjr7ighllXscfmXEk1ugtiKvU3"
+    },
+    {
+        "id": 4,
+        "username": "",
+        "password": "$5$rounds=535000$6lY71MBZTRcBDFv1$j7Ayx/PptJ0l6SSVSep3POqCZsy31kAGVm/D6zgfvk/"
+    },
+    {
+        "id": 5,
+        "username": "",
+        "password": "$5$rounds=535000$aZL.lgc3PLamiJhx$Ucrt.rfJcT8ZaF35WztJmAhtGf6D884ZM1xroty9SlD"
+    },
+    {
+        "id": 6,
+        "username": "brook",
+        "password": "$5$rounds=535000$h92U6CCPCp3k6D2y$3Q1r0BU2ISaWW8BphPXtS4kR.s811RKL2oizHmFuFk/"
     }
 ]
