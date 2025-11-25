@@ -1,10 +1,10 @@
-from fastapi import FastAPI,Form,Depends,Request
+from fastapi import FastAPI,Form,Depends,Request,HTTPException,status
 from jose import jwt
 from passlib.context import CryptContext
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse,RedirectResponse
 from pydantic import  BaseModel
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm,OAuth2PasswordBearer
 import json
 import os
 from datetime import datetime,timedelta
@@ -18,6 +18,7 @@ class Users(BaseModel):
 
 templates = Jinja2Templates(directory="templates")
 pwd_context = CryptContext(schemes=['sha256_crypt'],deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/')
 SECRET_KEY = "mysecretkey"
 ALGORITHM = 'HS256'
 token_expire = 15
@@ -67,4 +68,19 @@ async def login_post(username:str=Form(),password:str=Form()):
     expiry = datetime.utcnow() + timedelta(minutes=token_expire)
     for_payload = {"id":get_data['id'],"username":get_data['username'],"exp":expiry}
     your_token = jwt.encode(for_payload,SECRET_KEY,algorithm=ALGORITHM)
-    return RedirectResponse('/main',status_code=303)
+    response = RedirectResponse('/main',status_code=303)
+    response.set_cookie('token',your_token)
+    return response
+def verify_token(token:str):
+    try:
+        decode_token = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        return decode_token
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Invalid token or token expired')
+@app.get('/protected')
+async def protected(request:Request):
+    token = request.cookies.get('token')
+    if not token:
+        raise HTTPException(status_code=401,detail='No token found')
+    user = verify_token(token)
+    return {'message':'Valid','user':user,'token':token}
