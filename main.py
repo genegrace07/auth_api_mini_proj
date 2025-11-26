@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse,RedirectResponse
 from pydantic import  BaseModel
-from fastapi.security import OAuth2PasswordRequestForm,OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordRequestForm,OAuth2PasswordBearer,HTTPBearer
 import json
 import os
 from datetime import datetime,timedelta
@@ -19,6 +19,7 @@ class Users(BaseModel):
 templates = Jinja2Templates(directory="templates")
 pwd_context = CryptContext(schemes=['sha256_crypt'],deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/')
+bearer_scheme = HTTPBearer()
 SECRET_KEY = "mysecretkey"
 ALGORITHM = 'HS256'
 token_expire = 15
@@ -78,9 +79,12 @@ def verify_token(token:str):
     except Exception:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail='Invalid token or token expired')
 @app.get('/protected')
-async def protected(request:Request):
-    token = request.cookies.get('token')
-    if not token:
-        raise HTTPException(status_code=401,detail='No token found')
-    user = verify_token(token)
-    return {'message':'Valid','user':user,'token':token}
+async def protected(request:Request,bearer_token=Depends(bearer_scheme)):
+    cookies_token = request.cookies.get('token')
+    if cookies_token:
+       user = verify_token(cookies_token)
+       return {'auth':'cookies','user':user}
+    if bearer_token:
+        user = verify_token(bearer_token.credentials)
+        return {'auth':'bearer','user':user}
+    return HTTPException(status_code=401,detail='Token invalid')
