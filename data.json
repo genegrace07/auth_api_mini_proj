@@ -33,5 +33,10 @@
         "id": 6,
         "username": "brook",
         "password": "$5$rounds=535000$h92U6CCPCp3k6D2y$3Q1r0BU2ISaWW8BphPXtS4kR.s811RKL2oizHmFuFk/"
+    },
+    {
+        "id": 7,
+        "username": "jinbei",
+        "password": "$5$rounds=535000$1Dqyg3ymgJNA1teV$GD1Wr81zXih1Fa3UOhL.R6mJKOxlO9mtY5.86Iz56PA"
     }
 ]
